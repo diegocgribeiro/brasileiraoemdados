@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soccer Match Predictor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: #f9f9f9;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .teams-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .team-column {
+            flex: 1;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: white;
+            padding: 15px;
+        }
+
+        .team-header {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .team-list {
+            list-style-type: none;
+        }
+
+        .team-item {
+            padding: 10px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .team-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .team-item.selected {
+            background-color: #e6f7e9;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .predict-button {
+            background-color: #222;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .predict-button:hover {
+            background-color: #000;
+        }
+
+        .predict-button:disabled {
+            background-color: #999;
+            cursor: not-allowed;
+        }
+
+        .results-container {
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: white;
+            padding: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .match-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .stats-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stats-section {
+            flex: 1;
+            min-width: 300px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 15px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .section-header i {
+            font-size: 18px;
+            color: #666;
+        }
+
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .stats-table td {
+            padding: 5px 0;
+        }
+
+        .stats-table .value {
+            text-align: right;
+            font-weight: 500;
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+        }
+
+        .progress-label {
+            width: 200px;
+        }
+
+        .progress-value {
+            width: 50px;
+            text-align: right;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 8px;
+            background-color: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        .progress-fill.home {
+            background-color: #004B87;
+        }
+
+        .progress-fill.away {
+            background-color: #2196F3;
+        }
+
+        .progress-fill.draw {
+            background-color: #FFC107;
+        }
+
+        .form-indicators {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .form-indicator {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .form-w {
+            background-color: #004B87;
+        }
+
+        .form-l {
+            background-color: #F44336;
+        }
+
+        .form-d {
+            background-color: #FFC107;
+        }
+
+        .stats-comparison {
+            margin-top: 10px;
+        }
+
+        .comparison-item {
+            margin-bottom: 15px;
+        }
+
+        .comparison-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .comparison-bar {
+            height: 10px;
+            background-color: #eee;
+            position: relative;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .comparison-fill-home {
+            position: absolute;
+            height: 100%;
+            left: 0;
+            background-color: #004B87;
+            border-radius: 5px 0 0 5px;
+        }
+
+        .comparison-fill-away {
+            position: absolute;
+            height: 100%;
+            right: 0;
+            background-color: #2196F3;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .comparison-stat {
+            font-weight: 500;
+        }
+
+        .comparison-name {
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .teams-container {
+                flex-direction: column;
+            }
+
+            .stats-container {
+                flex-direction: column;
+            }
+
+            .stats-section {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Soccer Match Predictor</h1>
+
+    <div class="teams-container">
+        <div class="team-column">
+            <h2 class="team-header">Home Team</h2>
+            <ul class="team-list" id="home-team-list">
+                <li class="team-item" data-team="Inter Milan">Inter Milan</li>
+                <li class="team-item" data-team="Ajax">Ajax</li>
+                <li class="team-item" data-team="Porto">Porto</li>
+                <li class="team-item" data-team="Benfica">Benfica</li>
+                <li class="team-item" data-team="Sporting CP">Sporting CP</li>
+                <li class="team-item" data-team="Flamengo">Flamengo</li>
+                <li class="team-item" data-team="River Plate">River Plate</li>
+            </ul>
+        </div>
+
+        <div class="button-container">
+            <button class="predict-button" id="predict-button" disabled>Prever</button>
+        </div>
+
+        <div class="team-column">
+            <h2 class="team-header">Away Team</h2>
+            <ul class="team-list" id="away-team-list">
+                <li class="team-item" data-team="Barcelona">Barcelona</li>
+                <li class="team-item" data-team="Real Madrid">Real Madrid</li>
+                <li class="team-item" data-team="Manchester United">Manchester United</li>
+                <li class="team-item" data-team="Liverpool">Liverpool</li>
+                <li class="team-item" data-team="Bayern Munich">Bayern Munich</li>
+                <li class="team-item" data-team="Paris Saint-Germain">Paris Saint-Germain</li>
+                <li class="team-item" data-team="Juventus">Juventus</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="results-container" id="results-container">
+        <h2 class="match-title" id="match-title">Benfica vs Manchester United</h2>
+
+        <div class="stats-container">
+            <div class="stats-section">
+                <div class="section-header">
+                    <span>🏆 Head to Head</span>
+                </div>
+                <table class="stats-table">
+                    <tr>
+                        <td>Total Matches:</td>
+                        <td class="value" id="total-matches">13</td>
+                    </tr>
+                    <tr>
+                        <td><span id="home-team-name-h2h">Benfica</span> Wins:</td>
+                        <td class="value" id="home-wins">0</td>
+                    </tr>
+                    <tr>
+                        <td><span id="away-team-name-h2h">Manchester United</span> Wins:</td>
+                        <td class="value" id="away-wins">8</td>
+                    </tr>
+                    <tr>
+                        <td>Draws:</td>
+                        <td class="value" id="draws">0</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="stats-section">
+                <div class="section-header">
+                    <span>📅 Last Match</span>
+                </div>
+                <table class="stats-table">
+                    <tr>
+                        <td>Date:</td>
+                        <td class="value" id="last-match-date">2023-11-15</td>
+                    </tr>
+                    <tr>
+                        <td>Score:</td>
+                        <td class="value" id="last-match-score">2 - 1</td>
+                    </tr>
+                    <tr>
+                        <td>Winner:</td>
+                        <td class="value" id="last-match-winner">Manchester United</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="stats-section">
+                <div class="section-header">
+                    <span>🔮 Prediction</span>
+                </div>
+                <div>
+                    <div class="progress-container">
+                        <div class="progress-label"><span id="home-team-name-pred">Benfica</span> Win:</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill home" id="home-win-bar" style="width: 33%"></div>
+                        </div>
+                        <div class="progress-value" id="home-win-percentage">33%</div>
+                    </div>
+
+                    <div class="progress-container">
+                        <div class="progress-label"><span id="away-team-name-pred">Manchester United</span> Win:</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill away" id="away-win-bar" style="width: 22%"></div>
+                        </div>
+                        <div class="progress-value" id="away-win-percentage">22%</div>
+                    </div>
+
+                    <div class="progress-container">
+                        <div class="progress-label">Draw:</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill draw" id="draw-bar" style="width: 45%"></div>
+                        </div>
+                        <div class="progress-value" id="draw-percentage">45%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <div class="section-header">
+                    <span>👥 Team Form</span>
+                </div>
+                <div>
+                    <div>
+                        <div id="home-team-name-form">Benfica</div>
+                        <div class="form-indicators" id="home-team-form">
+                            <div class="form-indicator form-d">D</div>
+                            <div class="form-indicator form-w">W</div>
+                            <div class="form-indicator form-l">L</div>
+                            <div class="form-indicator form-w">W</div>
+                            <div class="form-indicator form-d">D</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <div id="away-team-name-form">Manchester United</div>
+                        <div class="form-indicators" id="away-team-form">
+                            <div class="form-indicator form-d">D</div>
+                            <div class="form-indicator form-l">L</div>
+                            <div class="form-indicator form-l">L</div>
+                            <div class="form-indicator form-w">W</div>
+                            <div class="form-indicator form-w">W</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <div class="section-header">
+                    <span>📊 Key Stats Comparison</span>
+                </div>
+                <div class="stats-comparison">
+                    <div class="comparison-item">
+                        <div class="comparison-labels">
+                            <span class="comparison-stat" id="home-possession">52%</span>
+                            <span class="comparison-name">Possession</span>
+                            <span class="comparison-stat" id="away-possession">48%</span>
+                        </div>
+                        <div class="comparison-bar">
+                            <div class="comparison-fill-home" id="home-possession-bar" style="width: 52%"></div>
+                            <div class="comparison-fill-away" id="away-possession-bar" style="width: 48%"></div>
+                        </div>
+                    </div>
+
+                    <div class="comparison-item">
+                        <div class="comparison-labels">
+                            <span class="comparison-stat" id="home-shots">8</span>
+                            <span class="comparison-name">Shots on Target</span>
+                            <span class="comparison-stat" id="away-shots">7</span>
+                        </div>
+                        <div class="comparison-bar">
+                            <div class="comparison-fill-home" id="home-shots-bar" style="width: 53%"></div>
+                            <div class="comparison-fill-away" id="away-shots-bar" style="width: 47%"></div>
+                        </div>
+                    </div>
+
+                    <div class="comparison-item">
+                        <div class="comparison-labels">
+                            <span class="comparison-stat" id="home-cards">5</span>
+                            <span class="comparison-name">Yellow Cards</span>
+                            <span class="comparison-stat" id="away-cards">3</span>
+                        </div>
+                        <div class="comparison-bar">
+                            <div class="comparison-fill-home" id="home-cards-bar" style="width: 62.5%"></div>
+                            <div class="comparison-fill-away" id="away-cards-bar" style="width: 37.5%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // DOM elements
+    const homeTeamList = document.getElementById('home-team-list');
+    const awayTeamList = document.getElementById('away-team-list');
+    const predictButton = document.getElementById('predict-button');
+    const resultsContainer = document.getElementById('results-container');
+    const matchTitle = document.getElementById('match-title');
+
+    // Team name elements
+    const homeTeamNameH2h = document.getElementById('home-team-name-h2h');
+    const awayTeamNameH2h = document.getElementById('away-team-name-h2h');
+    const homeTeamNamePred = document.getElementById('home-team-name-pred');
+    const awayTeamNamePred = document.getElementById('away-team-name-pred');
+    const homeTeamNameForm = document.getElementById('home-team-name-form');
+    const awayTeamNameForm = document.getElementById('away-team-name-form');
+
+    // Selected teams
+    let selectedHomeTeam = null;
+    let selectedAwayTeam = null;
+
+    // Match data (would come from an API in a real application)
+    const matchData = {
+        'Benfica-Manchester United': {
+            headToHead: {
+                totalMatches: 13,
+                homeWins: 0,
+                awayWins: 8,
+                draws: 0
+            },
+            lastMatch: {
+                date: '2023-11-15',
+                score: '2 - 1',
+                winner: 'Manchester United'
+            },
+            prediction: {
+                homeWin: 33,
+                awayWin: 22,
+                draw: 45
+            },
+            teamForm: {
+                home: ['D', 'W', 'L', 'W', 'D'],
+                away: ['D', 'L', 'L', 'W', 'W']
+            },
+            keyStats: {
+                possession: {
+                    home: 52,
+                    away: 48
+                },
+                shotsOnTarget: {
+                    home: 8,
+                    away: 7
+                },
+                yellowCards: {
+                    home: 5,
+                    away: 3
+                }
+            }
+        }
+    };
+
+    // Generate random match data for any team combination
+    function generateRandomMatchData(homeTeam, awayTeam) {
+        const homeWins = Math.floor(Math.random() * 10);
+        const awayWins = Math.floor(Math.random() * 10);
+        const draws = Math.floor(Math.random() * 5);
+        const totalMatches = homeWins + awayWins + draws;
+
+        const homeWinProb = Math.floor(Math.random() * 40) + 20;
+        const awayWinProb = Math.floor(Math.random() * 40) + 20;
+        const drawProb = 100 - homeWinProb - awayWinProb;
+
+        const homePossession = Math.floor(Math.random() * 30) + 35;
+        const awayPossession = 100 - homePossession;
+
+        const homeShots = Math.floor(Math.random() * 10) + 3;
+        const awayShots = Math.floor(Math.random() * 10) + 3;
+
+        const homeCards = Math.floor(Math.random() * 6) + 1;
+        const awayCards = Math.floor(Math.random() * 6) + 1;
+
+        const formOptions = ['W', 'L', 'D'];
+        const homeForm = Array.from({length: 5}, () => formOptions[Math.floor(Math.random() * formOptions.length)]);
+        const awayForm = Array.from({length: 5}, () => formOptions[Math.floor(Math.random() * formOptions.length)]);
+
+        // Generate a random score
+        const homeScore = Math.floor(Math.random() * 4);
+        const awayScore = Math.floor(Math.random() * 4);
+        let winner = homeScore > awayScore ? homeTeam : (awayScore > homeScore ? awayTeam : 'Draw');
+
+        // Generate a random date in the last 60 days
+        const date = new Date();
+        date.setDate(date.getDate() - Math.floor(Math.random() * 60));
+        const formattedDate = date.toISOString().split('T')[0];
+
+        return {
+            headToHead: {
+                totalMatches,
+                homeWins,
+                awayWins,
+                draws
+            },
+            lastMatch: {
+                date: formattedDate,
+                score: `${homeScore} - ${awayScore}`,
+                winner
+            },
+            prediction: {
+                homeWin: homeWinProb,
+                awayWin: awayWinProb,
+                draw: drawProb
+            },
+            teamForm: {
+                home: homeForm,
+                away: awayForm
+            },
+            keyStats: {
+                possession: {
+                    home: homePossession,
+                    away: awayPossession
+                },
+                shotsOnTarget: {
+                    home: homeShots,
+                    away: awayShots
+                },
+                yellowCards: {
+                    home: homeCards,
+                    away: awayCards
+                }
+            }
+        };
+    }
+
+    // Handle team selection
+    function handleTeamSelection(listElement, isHomeTeam) {
+        const teamItems = listElement.querySelectorAll('.team-item');
+
+        teamItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // Remove selected class from all items in this list
+                teamItems.forEach(i => i.classList.remove('selected'));
+
+                // Add selected class to clicked item
+                item.classList.add('selected');
+
+                // Update selected team
+                const teamName = item.dataset.team;
+
+                if (isHomeTeam) {
+                    selectedHomeTeam = teamName;
+                } else {
+                    selectedAwayTeam = teamName;
+                }
+
+                // Enable predict button if both teams are selected
+                predictButton.disabled = !(selectedHomeTeam && selectedAwayTeam);
+            });
+        });
+    }
+
+    // Display match statistics
+    function displayMatchStats(homeTeam, awayTeam) {
+        // Update match title
+        matchTitle.textContent = `${homeTeam} vs ${awayTeam}`;
+
+        // Update team names in all sections
+        homeTeamNameH2h.textContent = homeTeam;
+        awayTeamNameH2h.textContent = awayTeam;
+        homeTeamNamePred.textContent = homeTeam;
+        awayTeamNamePred.textContent = awayTeam;
+        homeTeamNameForm.textContent = homeTeam;
+        awayTeamNameForm.textContent = awayTeam;
+
+        // Get match data (either from predefined data or generate random)
+        const matchKey = `${homeTeam}-${awayTeam}`;
+        const data = matchData[matchKey] || generateRandomMatchData(homeTeam, awayTeam);
+
+        // Update head to head stats
+        document.getElementById('total-matches').textContent = data.headToHead.totalMatches;
+        document.getElementById('home-wins').textContent = data.headToHead.homeWins;
+        document.getElementById('away-wins').textContent = data.headToHead.awayWins;
+        document.getElementById('draws').textContent = data.headToHead.draws;
+
+        // Update last match stats
+        document.getElementById('last-match-date').textContent = data.lastMatch.date;
+        document.getElementById('last-match-score').textContent = data.lastMatch.score;
+        document.getElementById('last-match-winner').textContent = data.lastMatch.winner;
+
+        // Update prediction stats
+        document.getElementById('home-win-percentage').textContent = `${data.prediction.homeWin}%`;
+        document.getElementById('away-win-percentage').textContent = `${data.prediction.awayWin}%`;
+        document.getElementById('draw-percentage').textContent = `${data.prediction.draw}%`;
+
+        document.getElementById('home-win-bar').style.width = `${data.prediction.homeWin}%`;
+        document.getElementById('away-win-bar').style.width = `${data.prediction.awayWin}%`;
+        document.getElementById('draw-bar').style.width = `${data.prediction.draw}%`;
+
+        // Update team form
+        const homeTeamForm = document.getElementById('home-team-form');
+        const awayTeamForm = document.getElementById('away-team-form');
+
+        homeTeamForm.innerHTML = '';
+        awayTeamForm.innerHTML = '';
+
+        data.teamForm.home.forEach(result => {
+            const indicator = document.createElement('div');
+            indicator.className = `form-indicator form-${result.toLowerCase()}`;
+            indicator.textContent = result;
+            homeTeamForm.appendChild(indicator);
+        });
+
+        data.teamForm.away.forEach(result => {
+            const indicator = document.createElement('div');
+            indicator.className = `form-indicator form-${result.toLowerCase()}`;
+            indicator.textContent = result;
+            awayTeamForm.appendChild(indicator);
+        });
+
+        // Update key stats
+        document.getElementById('home-possession').textContent = `${data.keyStats.possession.home}%`;
+        document.getElementById('away-possession').textContent = `${data.keyStats.possession.away}%`;
+        document.getElementById('home-shots').textContent = data.keyStats.shotsOnTarget.home;
+        document.getElementById('away-shots').textContent = data.keyStats.shotsOnTarget.away;
+        document.getElementById('home-cards').textContent = data.keyStats.yellowCards.home;
+        document.getElementById('away-cards').textContent = data.keyStats.yellowCards.away;
+
+        document.getElementById('home-possession-bar').style.width = `${data.keyStats.possession.home}%`;
+        document.getElementById('away-possession-bar').style.width = `${data.keyStats.possession.away}%`;
+
+        const totalShots = data.keyStats.shotsOnTarget.home + data.keyStats.shotsOnTarget.away;
+        const homeShotsPercentage = (data.keyStats.shotsOnTarget.home / totalShots) * 100;
+        const awayShotsPercentage = (data.keyStats.shotsOnTarget.away / totalShots) * 100;
+
+        document.getElementById('home-shots-bar').style.width = `${homeShotsPercentage}%`;
+        document.getElementById('away-shots-bar').style.width = `${awayShotsPercentage}%`;
+
+        const totalCards = data.keyStats.yellowCards.home + data.keyStats.yellowCards.away;
+        const homeCardsPercentage = (data.keyStats.yellowCards.home / totalCards) * 100;
+        const awayCardsPercentage = (data.keyStats.yellowCards.away / totalCards) * 100;
+
+        document.getElementById('home-cards-bar').style.width = `${homeCardsPercentage}%`;
+        document.getElementById('away-cards-bar').style.width = `${awayCardsPercentage}%`;
+
+        // Show results container
+        resultsContainer.style.display = 'block';
+    }
+
+    // Initialize
+    handleTeamSelection(homeTeamList, true);
+    handleTeamSelection(awayTeamList, false);
+
+    // Add event listener to predict button
+    predictButton.addEventListener('click', () => {
+        if (selectedHomeTeam && selectedAwayTeam) {
+            displayMatchStats(selectedHomeTeam, selectedAwayTeam);
+        }
+    });
+
+    // Pre-select Benfica and Manchester United for demonstration
+    document.querySelector('#home-team-list [data-team="Benfica"]').click();
+    document.querySelector('#away-team-list [data-team="Manchester United"]').click();
+</script>
+</body>
+</html>

@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brasileirão 2025 - Predição</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      background-color: #f9f9f9;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .teams-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .team-column {
+      flex: 1;
+      border: 1px solid #e0e0e0;
+      border-radius: 5px;
+      background-color: white;
+      padding: 15px;
+    }
+
+    .team-header {
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .team-list {
+      max-height: 300px; /* Define a altura máxima */
+      overflow-y: auto; /* Adiciona a barra de rolagem vertical */
+      border: 1px solid #ddd;
+    }
+
+    .team-item {
+      padding: 10px;
+      margin-bottom: 5px;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+
+    .team-item:hover {
+      background-color: #f5f5f5;
+    }
+
+    .team-item.selected {
+      background-color: rgba(176, 255, 255, 0.33);
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+
+    .results-container {
+      border: 1px solid #e0e0e0;
+      border-radius: 5px;
+      background-color: white;
+      padding: 15px;
+      margin-top: 20px;
+      display: none;
+    }
+
+    .match-title {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 15px;
+    }
+
+    .stats-section {
+      flex: 1;
+      min-width: 300px;
+      border: 1px solid #e0e0e0;
+      border-radius: 5px;
+      padding: 15px;
+    }
+
+    .stats-section2 {
+      flex: 1;
+      min-width: 300px;
+      border: 1px solid #e0e0e0;
+      border-radius: 5px;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .stats-section2 .stats-column {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      font-weight: 500;
+      align-content: center;
+
+
+    }
+
+    .section-header span{
+      text-align: center;
+
+    }
+
+    .section-header i {
+      font-size: 18px;
+      color: #666;
+
+    }
+
+    .stats-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    .search-bar {
+      width: 100%; /* Ocupa toda a largura do container */
+      padding: 10px; /* Adiciona espaçamento interno */
+      margin-bottom: 10px; /* Espaçamento inferior para separar da lista */
+      border: 1px solid #ccc; /* Borda cinza clara */
+      border-radius: 5px; /* Bordas arredondadas */
+      font-size: 14px; /* Tamanho da fonte */
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Efeito de profundidade */
+      outline: none; /* Remove o contorno padrão */
+      transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Animações suaves */
+    }
+
+    .search-bar:focus {
+      border-color: #004B87; /* Cor da borda ao focar */
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 5px rgb(0, 75, 135); /* Destaque ao focar */
+    }
+    .stats-table td {
+      padding: 5px 0;
+
+    }
+
+    .stats-table .value {
+      text-align: left;
+      font-weight: 500;
+    }
+
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+      justify-content: flex-start;
+      flex-wrap: wrap;/* Alinha os botões à esquerda */
+    }
+
+    .btn {
+      background-color: #004B87; /* Verde */
+      border: none;
+      color: white;
+      padding: 5px 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Estilo quando o botão é hover */
+    .btn:hover {
+      background-color: #004B87; /* Verde mais escuro */
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+      transform: translateY(-2px);
+    }
+
+    /* Estilo para o botão ativo (clicado ou selecionado) */
+    .btn:active, .btn.selected {
+      background-color: #ffffff; /* Verde escuro mais intenso */
+      transform: translateY(1px);
+      color: #004B87;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border: 2px solid #004B87; /* Borda branca para destacar */
+    }
+
+    /* Estilo para o botão com foco */
+    .btn:focus {
+      outline: none;
+      border: 2px solid #004B87; /* Borda verde ao focar */
+    }
+
+    /* Estilo para botões desabilitados */
+    .btn:disabled {
+      background-color: #d3d3d3; /* Cor cinza para botões desabilitados */
+      color: #a8a8a8;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+
+    .stats-comparison {
+      margin-top: 10px;
+    }
+
+    .comparison-item {
+      margin-bottom: 15px;
+    }
+
+    .comparison-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+
+    .comparison-bar {
+      height: 10px;
+      background-color: #eee;
+      position: relative;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .comparison-fill-home {
+      position: absolute;
+      height: 100%;
+      left: 0;
+      background-color: #004B87;
+      border-radius: 5px 0 0 5px;
+    }
+
+    .comparison-fill-away {
+      position: absolute;
+      height: 100%;
+      right: 0;
+      background-color: #7ec4ff;
+      border-radius: 0 5px 5px 0;
+    }
+
+    .comparison-stat {
+      font-weight: 500;
+    }
+
+    .tituler{
+      text-align: center;
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 15px;
+      margin-top: 15px;
+    }
+
+    .comparison-name {
+      color: #666;
+    }
+
+    @media (max-width: 768px) {
+      .teams-container {
+        flex-direction: column;
+      }
+
+      .stats-container {
+        flex-direction: column;
+      }
+
+      .stats-section {
+        width: 100%;
+      }
+    }
+
+    .header {
+      color: #004B87;
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    .logo {
+      max-width: 150px;
+      margin-bottom: 10px;
+    }
+
+    .site-name {
+      font-size: 36px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .tagline {
+      font-size: 18px;
+      margin-top: 5px;
+      color: #4e4e4e;
+    }
+
+    .probabilidadewin{
+      text-align: left;
+      color: darkgreen;
+    }
+    .probabilidadeloss{
+      text-align: left;
+      color: darkred;
+    }
+  </style>
+</head>
+<body>
+
+
+
+<div class="container">
+  <header class="header">
+    <img src="logo.png" alt="Logo do Site" class="logo"> <!-- Substitua pela sua logo -->
+    <div class="site-name">Brasileirão em Dados</div> <!-- Nome Criativo -->
+    <div class="tagline">As Melhores Estatísticas do Brasileirão 2025</div>
+  </header>
+  <div class="teams-container">
+    <div class="team-column">
+      <h2 class="team-header">Mandante</h2>
+      <input type="text" class="search-bar" placeholder="Pesquise o nome..." onkeyup="filterTeams(this, 'home-team-list')">
+      <ul class="team-list" id="home-team-list">
+        <li class="team-item" data-team="Botafogo FR">Botafogo FR</li>
+        <li class="team-item" data-team="CA Mineiro">CA Mineiro</li>
+        <li class="team-item" data-team="CR Flamengo">CR Flamengo</li>
+        <li class="team-item" data-team="CR Vasco da Gama">CR Vasco da Gama</li>
+        <li class="team-item" data-team="Ceará SC">Ceará SC</li>
+        <li class="team-item" data-team="Cruzeiro EC">Cruzeiro EC</li>
+        <li class="team-item" data-team="EC Bahia">EC Bahia</li>
+        <li class="team-item" data-team="EC Juventude">EC Juventude</li>
+        <li class="team-item" data-team="EC Vitória">EC Vitória</li>
+        <li class="team-item" data-team="Fluminense FC">Fluminense FC</li>
+        <li class="team-item" data-team="Fortaleza EC">Fortaleza EC</li>
+        <li class="team-item" data-team="Grêmio FB Porto Alegrense">Grêmio FB Porto Alegrense</li>
+        <li class="team-item" data-team="Mirassol FC">Mirassol FC</li>
+        <li class="team-item" data-team="Red Bull Bragantino">Red Bull Bragantino</li>
+        <li class="team-item" data-team="São Paulo FC">São Paulo FC</li>
+        <li class="team-item" data-team="SC Corinthians Paulista">SC Corinthians Paulista</li>
+        <li class="team-item" data-team="SC Internacional">SC Internacional</li>
+        <li class="team-item" data-team="SC do Recife">SC do Recife</li>
+        <li class="team-item" data-team="SE Palmeiras">SE Palmeiras</li>
+        <li class="team-item" data-team="Santos FC Sao Paulo">Santos FC Sao Paulo</li>
+      </ul>
+    </div>
+
+    <div class="button-container">
+      <button class="btn" id="predict-button" disabled>Prever</button>
+    </div>
+
+    <div class="team-column">
+      <h2 class="team-header">Visitante</h2>
+      <input type="text" class="search-bar" placeholder="Pesquise o nome..." onkeyup="filterTeams(this, 'away-team-list')">
+      <ul class="team-list" id="away-team-list">
+        <li class="team-item" data-team="Botafogo FR">Botafogo FR</li>
+        <li class="team-item" data-team="CA Mineiro">CA Mineiro</li>
+        <li class="team-item" data-team="CR Flamengo">CR Flamengo</li>
+        <li class="team-item" data-team="CR Vasco da Gama">CR Vasco da Gama</li>
+        <li class="team-item" data-team="Ceará SC">Ceará SC</li>
+        <li class="team-item" data-team="Cruzeiro EC">Cruzeiro EC</li>
+        <li class="team-item" data-team="EC Bahia">EC Bahia</li>
+        <li class="team-item" data-team="EC Juventude">EC Juventude</li>
+        <li class="team-item" data-team="EC Vitória">EC Vitória</li>
+        <li class="team-item" data-team="Fluminense FC">Fluminense FC</li>
+        <li class="team-item" data-team="Fortaleza EC">Fortaleza EC</li>
+        <li class="team-item" data-team="Grêmio FB Porto Alegrense">Grêmio FB Porto Alegrense</li>
+        <li class="team-item" data-team="Mirassol FC">Mirassol FC</li>
+        <li class="team-item" data-team="Red Bull Bragantino">Red Bull Bragantino</li>
+        <li class="team-item" data-team="São Paulo FC">São Paulo FC</li>
+        <li class="team-item" data-team="SC Corinthians Paulista">SC Corinthians Paulista</li>
+        <li class="team-item" data-team="SC Internacional">SC Internacional</li>
+        <li class="team-item" data-team="SC do Recife">SC do Recife</li>
+        <li class="team-item" data-team="SE Palmeiras">SE Palmeiras</li>
+        <li class="team-item" data-team="Santos FC Sao Paulo">Santos FC Sao Paulo</li>
+      </ul>
+    </div>
+  </div>
+  <p id="team-name"></p>
+  <div class="results-container" id="results-container">
+  <h2 class="match-title" id="match-title">CR Flamengo vs EC Juventude</h2>
+    <div class="stats-section">
+      <div class="section-header">
+        <span>📊 Probabilidade de Vitória / Não Vitória </span>
+      </div>
+      <h3 class="probabilidadewin" id="home_vitoria">Probabilidade de 53% - Vitória do Flamengo</h3>
+      <h3 class="probabilidadeloss" id="home_naovitoria">Probabilidade de 47% - Não Vitória do Flamengo</h3>
+    </div>
+  <div class="stats-section">
+    <div class="section-header">
+      <span>📊 Predição - Comparada</span>
+    </div>
+    <div class="stats-comparison">
+      <div class="comparison-item">
+        <div class="comparison-labels">
+          <span class="comparison-stat" id="home-gols">8</span>
+          <span class="comparison-name">Gols</span>
+          <span class="comparison-stat" id="away-gols">7</span>
+        </div>
+        <div class="comparison-bar">
+          <div class="comparison-fill-home" id="home-gols-bar" style="width: 53%"></div>
+          <div class="comparison-fill-away" id="away-gols-bar" style="width: 47%"></div>
+        </div>
+      </div>
+
+      <div class="comparison-item">
+        <div class="comparison-labels">
+          <span class="comparison-stat" id="home-chutes">8</span>
+          <span class="comparison-name">Chutes</span>
+          <span class="comparison-stat" id="away-chutes">7</span>
+        </div>
+        <div class="comparison-bar">
+          <div class="comparison-fill-home" id="home-chutes-bar" style="width: 53%"></div>
+          <div class="comparison-fill-away" id="away-chutes-bar" style="width: 47%"></div>
+        </div>
+      </div>
+
+      <div class="comparison-item">
+        <div class="comparison-labels">
+          <span class="comparison-stat" id="home-chutesnogol">8</span>
+          <span class="comparison-name">Chutes no Gol</span>
+          <span class="comparison-stat" id="away-chutesnogol">7</span>
+        </div>
+        <div class="comparison-bar">
+          <div class="comparison-fill-home" id="home-chutesnogol-bar" style="width: 53%"></div>
+          <div class="comparison-fill-away" id="away-chutesnogol-bar" style="width: 47%"></div>
+        </div>
+      </div>
+
+      <div class="comparison-item">
+        <div class="comparison-labels">
+          <span class="comparison-stat" id="home-chutesbloqueados">8</span>
+          <span class="comparison-name">Chutes Bloqueados</span>
+          <span class="comparison-stat" id="away-chutesbloqueados">7</span>
+        </div>
+        <div class="comparison-bar">
+          <div class="comparison-fill-home" id="home-chutesbloqueados-bar" style="width: 53%"></div>
+          <div class="comparison-fill-away" id="away-chutesbloqueados-bar" style="width: 47%"></div>
+        </div>
+      </div>
+
+      <div class="comparison-item">
+        <div class="comparison-labels">
+          <span class="comparison-stat" id="home-escanteios">8</span>
+          <span class="comparison-name">Escanteios</span>
+          <span class="comparison-stat" id="away-escanteios">7</span>
+        </div>
+        <div class="comparison-bar">
+          <div class="comparison-fill-home" id="home-escanteios-bar" style="width: 53%"></div>
+          <div class="comparison-fill-away" id="away-escanteios-bar" style="width: 47%"></div>
+        </div>
+      </div>
+
+      <div class="comparison-item">
+        <div class="comparison-labels">
+          <span class="comparison-stat" id="home-cartaoamarelo">8</span>
+          <span class="comparison-name">Cartao Amarelo</span>
+          <span class="comparison-stat" id="away-cartaoamarelo">7</span>
+        </div>
+        <div class="comparison-bar">
+          <div class="comparison-fill-home" id="home-cartaoamarelo-bar" style="width: 53%"></div>
+          <div class="comparison-fill-away" id="away-cartaoamarelo-bar" style="width: 47%"></div>
+        </div>
+      </div>
+
+      <div class="comparison-item">
+        <div class="comparison-labels">
+          <span class="comparison-stat" id="home-cartaovermelho">8</span>
+          <span class="comparison-name">Cartao Vermelho</span>
+          <span class="comparison-stat" id="away-cartaovermelho">7</span>
+        </div>
+        <div class="comparison-bar">
+          <div class="comparison-fill-home" id="home-cartaovermelho-bar" style="width: 53%"></div>
+          <div class="comparison-fill-away" id="away-cartaovermelho-bar" style="width: 47%"></div>
+        </div>
+      </div>
+
+      <div class="comparison-item">
+        <div class="comparison-labels">
+          <span class="comparison-stat" id="home-passes">8</span>
+          <span class="comparison-name">Passes</span>
+          <span class="comparison-stat" id="away-passes">7</span>
+        </div>
+        <div class="comparison-bar">
+          <div class="comparison-fill-home" id="home-passes-bar" style="width: 53%"></div>
+          <div class="comparison-fill-away" id="away-passes-bar" style="width: 47%"></div>
+        </div>
+      </div>
+
+      <div class="comparison-item">
+        <div class="comparison-labels">
+          <span class="comparison-stat" id="home-cruzamentos">8</span>
+          <span class="comparison-name">Cruzamentos</span>
+          <span class="comparison-stat" id="away-cruzamentos">7</span>
+        </div>
+        <div class="comparison-bar">
+          <div class="comparison-fill-home" id="home-cruzamentos-bar" style="width: 53%"></div>
+          <div class="comparison-fill-away" id="away-cruzamentos-bar" style="width: 47%"></div>
+        </div>
+      </div>
+
+      <div class="comparison-item">
+        <div class="comparison-labels">
+          <span class="comparison-stat" id="home-roubada">8</span>
+          <span class="comparison-name">Roubada de Bola</span>
+          <span class="comparison-stat" id="away-roubada">7</span>
+        </div>
+        <div class="comparison-bar">
+          <div class="comparison-fill-home" id="home-roubada-bar" style="width: 53%"></div>
+          <div class="comparison-fill-away" id="away-roubada-bar" style="width: 47%"></div>
+        </div>
+      </div>
+
+      <div class="comparison-item">
+        <div class="comparison-labels">
+          <span class="comparison-stat" id="home-impedimento">8</span>
+          <span class="comparison-name">Impedimentos</span>
+          <span class="comparison-stat" id="away-impedimento">7</span>
+        </div>
+        <div class="comparison-bar">
+          <div class="comparison-fill-home" id="home-impedimento-bar" style="width: 53%"></div>
+          <div class="comparison-fill-away" id="away-impedimento-bar" style="width: 47%"></div>
+        </div>
+      </div>
+
+      <div class="comparison-item">
+        <div class="comparison-labels">
+          <span class="comparison-stat" id="home-faltasfeitas">8</span>
+          <span class="comparison-name">Faltas Feitas</span>
+          <span class="comparison-stat" id="away-faltasfeitas">7</span>
+        </div>
+        <div class="comparison-bar">
+          <div class="comparison-fill-home" id="home-faltasfeitas-bar" style="width: 53%"></div>
+          <div class="comparison-fill-away" id="away-faltasfeitas-bar" style="width: 47%"></div>
+        </div>
+      </div>
+
+      <div class="comparison-item">
+        <div class="comparison-labels">
+          <span class="comparison-stat" id="home-faltasganhas">8</span>
+          <span class="comparison-name">Faltas Ganhas</span>
+          <span class="comparison-stat" id="away-faltasganhas">7</span>
+        </div>
+        <div class="comparison-bar">
+          <div class="comparison-fill-home" id="home-faltasganhas-bar" style="width: 53%"></div>
+          <div class="comparison-fill-away" id="away-faltasganhas-bar" style="width: 47%"></div>
+        </div>
+      </div>
+
+      <div class="comparison-item">
+        <div class="comparison-labels">
+          <span class="comparison-stat" id="home-defesas">8</span>
+          <span class="comparison-name">Defesas do Goleiro</span>
+          <span class="comparison-stat" id="away-defesas">7</span>
+        </div>
+        <div class="comparison-bar">
+          <div class="comparison-fill-home" id="home-defesas-bar" style="width: 53%"></div>
+          <div class="comparison-fill-away" id="away-defesas-bar" style="width: 47%"></div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+    <h2 class = "tituler"><strong>Stats - Todos os Jogos</strong></h2>
+    <div class="stats-section2">
+
+      <div class="stats-column">
+        <div class="section-header">
+          <span id="home-team-name">🏠 Flamengo</span>
+        </div>
+
+        <!-- Buttons to toggle between Geral, Mandante, and Visitante -->
+        <div class="button-group" id="home-buttons">
+          <button class="btn" id="geral-home">Geral - Feitos</button>
+          <button class="btn" id="mandante-home">Mandante - Feitos</button>
+          <button class="btn" id="visitante-home">Visitante - Feitos</button>
+          <button class="btn" id="geral-home-tomados">Geral - Tomados</button>
+          <button class="btn" id="mandante-home-tomados">Mandante - Tomados</button>
+          <button class="btn" id="visitante-home-tomados">Visitante - Tomados</button>
+        </div>
+
+        <table class="stats-table">
+          <tr>
+            <td>Gols:</td>
+            <td class="value" id="home-total-gols">13</td>
+          </tr>
+          <tr>
+            <td>Chutes:</td>
+            <td class="value" id="home-total-chutes">0</td>
+          </tr>
+          <tr>
+            <td>Chutes no Gol:</td>
+            <td class="value" id="home-total-chutesnogol">0</td>
+          </tr>
+          <tr>
+            <td>Chutes Bloqueados:</td>
+            <td class="value" id="home-total-chutesbloqueados">0</td>
+          </tr>
+          <tr>
+            <td>Escanteios:</td>
+            <td class="value" id="home-total-escanteios">0</td>
+          </tr>
+          <tr>
+            <td>Cartão Amarelo:</td>
+            <td class="value" id="home-total-cartaoamarelo">0</td>
+          </tr>
+          <tr>
+            <td>Cartão Vermelho:</td>
+            <td class="value" id="home-total-cartaovermelho">0</td>
+          </tr>
+          <tr>
+            <td>Passes:</td>
+            <td class="value" id="home-total-passes">0</td>
+          </tr>
+          <tr>
+            <td>Cruzamentos:</td>
+            <td class="value" id="home-total-cruzamentos">0</td>
+          </tr>
+          <tr>
+            <td>Roubadas de Bola:</td>
+            <td class="value" id="home-total-roubada">0</td>
+          </tr>
+          <tr>
+            <td>Impedimentos:</td>
+            <td class="value" id="home-total-impedimento">0</td>
+          </tr>
+          <tr>
+            <td>Faltas Feitas:</td>
+            <td class="value" id="home-total-faltasfeitas">0</td>
+          </tr>
+          <tr>
+            <td>Faltas Ganhas:</td>
+            <td class="value" id="home-total-faltasganhas">0</td>
+          </tr>
+          <tr>
+            <td>Defesas</td>
+            <td class="value" id="home-total-defesas">0</td>
+          </tr>
+          <tr>
+            <td>Jogos</td>
+            <td class="value" id="home-total-jogos">0</td>
+          </tr>
+        </table>
+
+      </div>
+
+      <div class="stats-column">
+        <div class="section-header">
+          <span id="away-team-name">🏠 Flamengo</span>
+        </div>
+
+        <!-- Buttons to toggle between Geral, Mandante, and Visitante -->
+        <div class="button-group" id="away-buttons">
+          <button class="btn" id="geral-away">Geral - Feitos</button>
+          <button class="btn" id="mandante-away">Mandante - Feitos</button>
+          <button class="btn" id="visitante-away">Visitante - Feitos</button>
+          <button class="btn" id="geral-away-tomados">Geral - Tomados</button>
+          <button class="btn" id="mandante-away-tomados">Mandante - Tomados</button>
+          <button class="btn" id="visitante-away-tomados">Visitante - Tomados</button>
+
+        </div>
+
+
+        <table class="stats-table">
+          <tr>
+            <td>Gols:</td>
+            <td class="value" id="away-total-gols">13</td>
+          </tr>
+          <tr>
+            <td>Chutes:</td>
+            <td class="value" id="away-total-chutes">0</td>
+          </tr>
+          <tr>
+            <td>Chutes no Gol:</td>
+            <td class="value" id="away-total-chutesnogol">0</td>
+          </tr>
+          <tr>
+            <td>Chutes Bloqueados:</td>
+            <td class="value" id="away-total-chutesbloqueados">0</td>
+          </tr>
+          <tr>
+            <td>Escanteios:</td>
+            <td class="value" id="away-total-escanteios">0</td>
+          </tr>
+          <tr>
+            <td>Cartão Amarelo:</td>
+            <td class="value" id="away-total-cartaoamarelo">0</td>
+          </tr>
+          <tr>
+            <td>Cartão Vermelho:</td>
+            <td class="value" id="away-total-cartaovermelho">0</td>
+          </tr>
+          <tr>
+            <td>Passes:</td>
+            <td class="value" id="away-total-passes">0</td>
+          </tr>
+          <tr>
+            <td>Cruzamentos:</td>
+            <td class="value" id="away-total-cruzamentos">0</td>
+          </tr>
+          <tr>
+            <td>Roubadas de Bola:</td>
+            <td class="value" id="away-total-roubada">0</td>
+          </tr>
+          <tr>
+            <td>Impedimentos:</td>
+            <td class="value" id="away-total-impedimento">0</td>
+          </tr>
+          <tr>
+            <td>Faltas Feitas:</td>
+            <td class="value" id="away-total-faltasfeitas">0</td>
+          </tr>
+          <tr>
+            <td>Faltas Ganhas:</td>
+            <td class="value" id="away-total-faltasganhas">0</td>
+          </tr>
+          <tr>
+            <td>Defesas</td>
+            <td class="value" id="away-total-defesas">0</td>
+          </tr>
+          <tr>
+            <td>Jogos</td>
+            <td class="value" id="away-total-jogos">0</td>
+          </tr>
+        </table>
+
+      </div>
+
+
+    </div>
+    <h2 class = "tituler"><strong>Stats - Jogadores</strong></h2>
+    <div class="stats-section2">
+      <div class="stats-column">
+        <div class="section-header">
+          <span id="home-player-name">🏠 Flamengo</span>
+        </div>
+        <!-- Buttons to toggle between Geral, Mandante, and Visitante -->
+        <div class="button-group" id="home-player-buttons">
+          <button class="btn" id="gols-home">Gols</button>
+          <button class="btn" id="assistencias-home">Assistência</button>
+          <button class="btn" id="chutesnogol-home">Chutes no Gol</button>
+          <button class="btn" id="chutes-home">Chutes</button>
+          <button class="btn" id="roubada-home">Roubada de Bola</button>
+          <button class="btn" id="cartaoamarelo-home">Cartão Amarelo</button>
+          <button class="btn" id="cartaovermelho-home">Cartão Vermelho</button>
+        </div>
+
+        <table class="stats-table">
+          <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Jogos</th>
+            <th id="stat-header-home">Gols</th>
+          </tr>
+          </thead>
+          <tbody id="player-table-home">
+          <!-- Os dados serão preenchidos dinamicamente -->
+          </tbody>
+        </table>
+
+      </div>
+
+      <div class="stats-column">
+        <div class="section-header">
+          <span id="away-player-name">🏠 Flamengo</span>
+        </div>
+        <!-- Buttons to toggle between Geral, Mandante, and Visitante -->
+        <div class="button-group" id="away-player-buttons">
+          <button class="btn" id="gols-away">Gols</button>
+          <button class="btn" id="assistencias-away">Assistência</button>
+          <button class="btn" id="chutesnogol-away">Chutes no Gol</button>
+          <button class="btn" id="chutes-away">Chutes</button>
+          <button class="btn" id="roubada-away">Roubada de Bola</button>
+          <button class="btn" id="cartaoamarelo-away">Cartão Amarelo</button>
+          <button class="btn" id="cartaovermelho-away">Cartão Vermelho</button>
+        </div>
+
+        <table class="stats-table">
+          <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Jogos</th>
+            <th id="stat-header-away">Gols</th>
+          </tr>
+          </thead>
+          <tbody id="player-table-away">
+          <!-- Os dados serão preenchidos dinamicamente -->
+          </tbody>
+        </table>
+
+      </div>
+      </div>
+  </div>
+  <h2>Feito por <a href="https://github.com/diegocgribeiro">@diegocgribeiro</a></h2>
+</div>
+
+<script>
+  function filterTeams(input, listId) {
+    const filter = input.value.toLowerCase();
+    const list = document.getElementById(listId);
+    const items = list.querySelectorAll('.team-item');
+
+    items.forEach(item => {
+      const text = item.textContent.toLowerCase();
+      item.style.display = text.includes(filter) ? '' : 'none';
+    });
+  }
+  // DOM elements
+  const homeTeamList = document.getElementById('home-team-list');
+  const awayTeamList = document.getElementById('away-team-list');
+  const predictButton = document.getElementById('predict-button');
+  const resultsContainer = document.getElementById('results-container');
+  const matchTitle = document.getElementById('match-title');
+
+  // Selected teams
+  let selectedHomeTeam = null;
+  let selectedAwayTeam = null;
+
+  function handleTeamSelection(listElement, isHomeTeam) {
+    const teamItems = listElement.querySelectorAll('.team-item');
+
+    teamItems.forEach(item => {
+      item.addEventListener('click', () => {
+        // Remove selected class from all items in this list
+        teamItems.forEach(i => i.classList.remove('selected'));
+
+        // Add selected class to clicked item
+        item.classList.add('selected');
+
+        // Update selected team
+        const teamName = item.dataset.team;
+
+        if (isHomeTeam) {
+          selectedHomeTeam = teamName;
+        } else {
+          selectedAwayTeam = teamName;
+        }
+        // Enable predict button if both teams are selected
+        predictButton.disabled = !(selectedHomeTeam && selectedAwayTeam);
+      });
+    });
+  }
+
+  // Display match statistics
+
+  // Initialize
+  handleTeamSelection(homeTeamList, true);
+  handleTeamSelection(awayTeamList, false);
+
+  function displayMatchStats(dataHome, dataAway, homeTeam, awayTeam) {
+    console.log(dataHome)
+    matchTitle.textContent = `${homeTeam} vs ${awayTeam}`;
+
+    HomeGeral = dataHome[0]
+    HomeMandante = dataHome[1]
+    HomeGeralTomados = dataHome[2]
+    HomeMandanteTomados = dataHome[3]
+    AwayGeral = dataAway[0]
+    AwayVisitante = dataAway[1]
+    AwayGeralTomados = dataAway[2]
+    AwayVisitanteTomados = dataAway[3]
+    // Update team names in all sections
+    function calculateStatistic(homeGeral, homeMandante, awayGeralTomados, awayVisitanteTomados, statName) {
+      const result = (((((homeGeral[statName]/homeGeral['Jogos'])*0.1) + ((homeMandante[statName]/homeMandante['Jogos'])*1.2)) + (((awayGeralTomados[statName]/awayGeralTomados['Jogos'])*0.1) + ((awayVisitanteTomados[statName]/awayVisitanteTomados['Jogos'])*1.2))) / 2)*0.8;
+      console.log(result)
+      console.log(Math.round(result))
+      return Math.round(result);
+
+    }
+
+    const HomeGols = calculateStatistic(HomeGeral, HomeMandante, AwayGeralTomados, AwayVisitanteTomados, 'Gols');
+    const AwayGols = calculateStatistic(AwayGeral, AwayVisitante, HomeGeralTomados, HomeMandanteTomados, 'Gols');
+    const HomeChutes = calculateStatistic(HomeGeral, HomeMandante, AwayGeralTomados, AwayVisitanteTomados, 'Chutes');
+    const AwayChutes = calculateStatistic(AwayGeral, AwayVisitante, HomeGeralTomados, HomeMandanteTomados, 'Chutes');
+    const HomeChutesNoGol = calculateStatistic(HomeGeral, HomeMandante, AwayGeralTomados, AwayVisitanteTomados, 'Chutes no Gol');
+    const AwayChutesNoGol = calculateStatistic(AwayGeral, AwayVisitante, HomeGeralTomados, HomeMandanteTomados, 'Chutes no Gol');
+    const HomeChutesBloqueados = calculateStatistic(HomeGeral, HomeMandante, AwayGeralTomados, AwayVisitanteTomados, 'Chutes Bloqueados');
+    const AwayChutesBloqueados = calculateStatistic(AwayGeral, AwayVisitante, HomeGeralTomados, HomeMandanteTomados, 'Chutes Bloqueados');
+    const HomeEscanteios = calculateStatistic(HomeGeral, HomeMandante, AwayGeralTomados, AwayVisitanteTomados, 'Escanteios');
+    const AwayEscanteios = calculateStatistic(AwayGeral, AwayVisitante, HomeGeralTomados, HomeMandanteTomados, 'Escanteios');
+    const HomeCartaoAmarelo = calculateStatistic(HomeGeral, HomeMandante, AwayGeralTomados, AwayVisitanteTomados, 'Cartão Amarelo');
+    const AwayCartaoAmarelo = calculateStatistic(AwayGeral, AwayVisitante, HomeGeralTomados, HomeMandanteTomados, 'Cartão Amarelo');
+    const HomeCartaoVermelho = calculateStatistic(HomeGeral, HomeMandante, AwayGeralTomados, AwayVisitanteTomados, 'Cartão Vermelho');
+    const AwayCartaoVermelho = calculateStatistic(AwayGeral, AwayVisitante, HomeGeralTomados, HomeMandanteTomados, 'Cartão Vermelho');
+    const HomePasses = calculateStatistic(HomeGeral, HomeMandante, AwayGeralTomados, AwayVisitanteTomados, 'Passes');
+    const AwayPasses = calculateStatistic(AwayGeral, AwayVisitante, HomeGeralTomados, HomeMandanteTomados, 'Passes');
+    const HomeCruzamentos = calculateStatistic(HomeGeral, HomeMandante, AwayGeralTomados, AwayVisitanteTomados, 'Cruzamentos');
+    const AwayCruzamentos = calculateStatistic(AwayGeral, AwayVisitante, HomeGeralTomados, HomeMandanteTomados, 'Cruzamentos');
+    const HomeRoubada = calculateStatistic(HomeGeral, HomeMandante, AwayGeralTomados, AwayVisitanteTomados, 'Roubada de Bola');
+    const AwayRoubada = calculateStatistic(AwayGeral, AwayVisitante, HomeGeralTomados, HomeMandanteTomados, 'Roubada de Bola');
+    const HomeImpedimento = calculateStatistic(HomeGeral, HomeMandante, AwayGeralTomados, AwayVisitanteTomados, 'Impedimentos');
+    const AwayImpedimento = calculateStatistic(AwayGeral, AwayVisitante, HomeGeralTomados, HomeMandanteTomados, 'Impedimentos');
+    const HomeFaltasFeitas = calculateStatistic(HomeGeral, HomeMandante, AwayGeralTomados, AwayVisitanteTomados, 'Faltas Concedidas');
+    const AwayFaltasFeitas = calculateStatistic(AwayGeral, AwayVisitante, HomeGeralTomados, HomeMandanteTomados, 'Faltas Concedidas');
+    const HomeFaltasGanhas = calculateStatistic(HomeGeral, HomeMandante, AwayGeralTomados, AwayVisitanteTomados, 'Faltas Ganhas');
+    const AwayFaltasGanhas = calculateStatistic(AwayGeral, AwayVisitante, HomeGeralTomados, HomeMandanteTomados, 'Faltas Ganhas');
+    const HomeDefesas = calculateStatistic(HomeGeral, HomeMandante, AwayGeralTomados, AwayVisitanteTomados, 'Defesas');
+    const AwayDefesas = calculateStatistic(AwayGeral, AwayVisitante, HomeGeralTomados, HomeMandanteTomados, 'Defesas');
+    const Z = 3.28285676 + (-0.02790538*(HomeChutesNoGol+AwayChutesNoGol)) + (-0.0441487*(HomeCartaoAmarelo+AwayCartaoAmarelo)) + (-0.08484195*(HomeChutesBloqueados+AwayChutesBloqueados)) + (-0.06308115*(HomeCruzamentos+AwayCruzamentos))
+    const proba = 1/(1+Math.exp(-Z))
+
+    document.getElementById('home_vitoria').textContent = `Probabilidade de ${(proba*100).toFixed(2)}% - Vitória do ${homeTeam}`
+    document.getElementById('home_naovitoria').textContent = `Probabilidade de ${((1-proba)*100).toFixed(2)}% - Não Vitória do ${homeTeam}`
+
+    document.getElementById('home-gols').textContent = HomeGols // Limiting to 2 decimal places
+    document.getElementById('away-gols').textContent = AwayGols
+    document.getElementById('home-chutes').textContent = HomeChutes
+    document.getElementById('away-chutes').textContent = AwayChutes
+    document.getElementById('home-chutesnogol').textContent = HomeChutesNoGol
+    document.getElementById('away-chutesnogol').textContent = AwayChutesNoGol;
+    document.getElementById('home-chutesbloqueados').textContent = HomeChutesBloqueados;
+    document.getElementById('away-chutesbloqueados').textContent = AwayChutesBloqueados;
+    document.getElementById('home-escanteios').textContent = HomeEscanteios;
+    document.getElementById('away-escanteios').textContent = AwayEscanteios;
+    document.getElementById('home-cartaoamarelo').textContent = HomeCartaoAmarelo;
+    document.getElementById('away-cartaoamarelo').textContent = AwayCartaoAmarelo;
+    document.getElementById('home-cartaovermelho').textContent = HomeCartaoVermelho;
+    document.getElementById('away-cartaovermelho').textContent = AwayCartaoVermelho;
+    document.getElementById('home-passes').textContent = HomePasses;
+    document.getElementById('away-passes').textContent = AwayPasses;
+    document.getElementById('home-cruzamentos').textContent = HomeCruzamentos;
+    document.getElementById('away-cruzamentos').textContent = AwayCruzamentos;
+    document.getElementById('home-roubada').textContent = HomeRoubada;
+    document.getElementById('away-roubada').textContent = AwayRoubada;
+    document.getElementById('home-impedimento').textContent = HomeImpedimento;
+    document.getElementById('away-impedimento').textContent = AwayImpedimento;
+    document.getElementById('home-faltasfeitas').textContent = HomeFaltasFeitas;
+    document.getElementById('away-faltasfeitas').textContent = AwayFaltasFeitas;
+    document.getElementById('home-faltasganhas').textContent = HomeFaltasGanhas;
+    document.getElementById('away-faltasganhas').textContent = AwayFaltasGanhas;
+    document.getElementById('home-defesas').textContent = HomeDefesas;
+    document.getElementById('away-defesas').textContent = AwayDefesas;
+
+    function setBarWidth(homeValue, awayValue, homeBarId, awayBarId) {
+      const total = homeValue + awayValue;
+      let homePercentage = 0;
+      let awayPercentage = 0;
+
+      if (total > 0) {
+        homePercentage = (homeValue / total) * 100;
+        awayPercentage = (awayValue / total) * 100;
+      }
+
+      document.getElementById(homeBarId).style.width = `${homePercentage}%`;
+      document.getElementById(awayBarId).style.width = `${awayPercentage}%`;
+    }
+
+    setBarWidth(HomeGols, AwayGols, 'home-gols-bar', 'away-gols-bar');
+    setBarWidth(HomeChutes, AwayChutes, 'home-chutes-bar', 'away-chutes-bar');
+    setBarWidth(HomeChutesNoGol, AwayChutesNoGol, 'home-chutesnogol-bar', 'away-chutesnogol-bar');
+    setBarWidth(HomeChutesBloqueados, AwayChutesBloqueados, 'home-chutesbloqueados-bar', 'away-chutesbloqueados-bar');
+    setBarWidth(HomeEscanteios, AwayEscanteios, 'home-escanteios-bar', 'away-escanteios-bar');
+    setBarWidth(HomeCartaoAmarelo, AwayCartaoAmarelo, 'home-cartaoamarelo-bar', 'away-cartaoamarelo-bar');
+    setBarWidth(HomeCartaoVermelho, AwayCartaoVermelho, 'home-cartaovermelho-bar', 'away-cartaovermelho-bar');
+    setBarWidth(HomePasses, AwayPasses, 'home-passes-bar', 'away-passes-bar');
+    setBarWidth(HomeCruzamentos, AwayCruzamentos, 'home-cruzamentos-bar', 'away-cruzamentos-bar');
+    setBarWidth(HomeRoubada, AwayRoubada, 'home-roubada-bar', 'away-roubada-bar');
+    setBarWidth(HomeImpedimento, AwayImpedimento, 'home-impedimento-bar', 'away-impedimento-bar');
+    setBarWidth(HomeFaltasFeitas, AwayFaltasFeitas, 'home-faltasfeitas-bar', 'away-faltasfeitas-bar');
+    setBarWidth(HomeFaltasGanhas, AwayFaltasGanhas, 'home-faltasganhas-bar', 'away-faltasganhas-bar');
+    setBarWidth(HomeDefesas, AwayDefesas, 'home-defesas-bar', 'away-defesas-bar');
+
+
+    const totalGols = HomeGols + AwayGols;
+    const homeGolsPorcentagem = (HomeGols / totalGols) * 100;
+    const awayGolsPorcentagem = (AwayGols / totalGols) * 100;
+
+    document.getElementById('home-gols-bar').style.width = `${homeGolsPorcentagem}%`;
+    document.getElementById('away-gols-bar').style.width = `${awayGolsPorcentagem}%`;
+
+    const totalChutes = HomeChutes + AwayChutes;
+    const homeChutesPorcentagem = (HomeChutes / totalChutes) * 100;
+    const awayChutesPorcentagem = (AwayChutes / totalChutes) * 100;
+
+    document.getElementById('home-chutes-bar').style.width = `${homeChutesPorcentagem}%`;
+    document.getElementById('away-chutes-bar').style.width = `${awayChutesPorcentagem}%`;
+
+
+
+    resultsContainer.style.display = 'block';
+
+  }
+  // Add event listener to predict button
+  predictButton.addEventListener('click', function () {
+
+    fetch(`http://localhost:3000/match-data?homeTeam=${selectedHomeTeam}&awayTeam=${selectedAwayTeam}`)
+            .then(response => response.json())
+            .then(data => {
+              if (selectedHomeTeam && selectedAwayTeam) {
+                // Access the data from each query
+                const dataHome = data.data1;
+                const dataAway = data.data2;
+                console.log(dataHome)
+                console.log(dataAway)
+                displayMatchStats(dataHome, dataAway, selectedHomeTeam, selectedAwayTeam);
+                geral(dataHome, dataAway, selectedHomeTeam, selectedAwayTeam);// Exemplo de como exibir
+              }
+            })
+            .catch(error => console.log(error));
+
+    fetch(`http://localhost:3000/player-stats?homeTeam=${selectedHomeTeam}&awayTeam=${selectedAwayTeam}`)
+            .then(response => response.json())
+            .then(data => {
+              if (selectedHomeTeam && selectedAwayTeam) {
+                // Access the data from each query
+                const dataHome = data.data1;
+                const dataAway = data.data2;
+                console.log(dataHome)
+                console.log(dataAway)
+                table(dataHome, dataAway, selectedHomeTeam, selectedAwayTeam);// Exemplo de como exibir
+              }
+            })
+            .catch(error => console.log(error));
+
+  });
+
+
+  document.querySelector('#home-team-list [data-team="CR Flamengo"]').click();
+  document.querySelector('#away-team-list [data-team="EC Juventude"]').click();
+
+  function geral(dataHome, dataAway, selectedHomeTeam, selectedAwayTeam){
+    document.getElementById('home-team-name').textContent = selectedHomeTeam;
+    document.getElementById('away-team-name').textContent = selectedAwayTeam;
+    updateStats('home', 'geral');
+    setActiveButton('geral-home', 'home');
+    updateStats('away', 'geral');
+    setActiveButton('geral-away', 'away');
+
+      document.getElementById('geral-home').addEventListener('click', function () {
+      updateStats('home', 'geral');
+      setActiveButton('geral-home', 'home');
+    });
+
+      document.getElementById('mandante-home').addEventListener('click', function () {
+      updateStats('home', 'mandante');
+      setActiveButton('mandante-home', 'home');
+    });
+
+      document.getElementById('visitante-home').addEventListener('click', function () {
+      updateStats('home', 'visitante');
+      setActiveButton('visitante-home', 'home');
+    });
+
+    document.getElementById('geral-home-tomados').addEventListener('click', function () {
+      updateStats('home', 'geral-tomados');
+      setActiveButton('geral-home-tomados', 'home');
+    });
+
+    document.getElementById('mandante-home-tomados').addEventListener('click', function () {
+      updateStats('home', 'mandante-tomados');
+      setActiveButton('mandante-home-tomados', 'home');
+    });
+
+    document.getElementById('visitante-home-tomados').addEventListener('click', function () {
+      updateStats('home', 'visitante-tomados');
+      setActiveButton('visitante-home-tomados', 'home');
+    });
+
+      document.getElementById('geral-away').addEventListener('click', function () {
+      updateStats('away', 'geral');
+      setActiveButton('geral-away', 'away');
+    });
+
+      document.getElementById('mandante-away').addEventListener('click', function () {
+      updateStats('away', 'mandante');
+      setActiveButton('mandante-away', 'away');
+    });
+
+      document.getElementById('visitante-away').addEventListener('click', function () {
+        updateStats('away', 'visitante');
+        setActiveButton('visitante-away', 'away');
+      });
+      document.getElementById('visitante-away-tomados').addEventListener('click', function () {
+          updateStats('away', 'visitante-tomados');
+          setActiveButton('visitante-away-tomados', 'away');
+      });
+    document.getElementById('geral-away-tomados').addEventListener('click', function () {
+          updateStats('away', 'geral-tomados');
+          setActiveButton('geral-away-tomados', 'away');
+    });
+
+        document.getElementById('mandante-away-tomados').addEventListener('click', function () {
+          updateStats('away', 'mandante-tomados');
+          setActiveButton('mandante-away-tomados', 'away');
+        });
+
+      // Função para gerenciar a seleção do botão
+    function setActiveButton(buttonId, group) {
+      // Seleciona todos os botões do grupo específico (home ou away)
+      const buttons = document.querySelectorAll(`#${group}-buttons .btn`);
+
+      // Remover a classe 'selected' de todos os botões dentro do grupo
+      buttons.forEach(button => {
+        button.classList.remove('selected');
+      });
+
+      // Adiciona a classe 'selected' ao botão clicado
+      const clickedButton = document.getElementById(buttonId);
+      clickedButton.classList.add('selected');
+    }
+
+
+
+
+
+    function updateStats(teamType, statType) {
+    // Dados fictícios para os exemplos
+    let statData = {};
+
+    if (teamType === 'home') {
+      if (statType === 'geral') {
+        statData = dataHome[0];
+      } else if (statType === 'mandante') {
+        statData = dataHome[1];
+      } else if (statType === 'visitante') {
+        statData = dataHome[5];
+      } else if (statType === 'visitante-tomados') {
+        statData = dataHome[4];
+      }
+        else if (statType === 'mandante-tomados') {
+        statData = dataHome[3];
+      }
+      else if (statType === 'geral-tomados') {
+        statData = dataHome[2];
+      }
+
+      // Atualizando os valores para o time da casa (home)
+      document.getElementById('home-total-gols').textContent = statData['Gols'];
+      document.getElementById('home-total-chutes').textContent = statData['Chutes'];
+      document.getElementById('home-total-chutesnogol').textContent = statData['Chutes no Gol'];
+      document.getElementById('home-total-chutesbloqueados').textContent = statData['Chutes Bloqueados'];
+      document.getElementById('home-total-escanteios').textContent = statData['Escanteios'];
+      document.getElementById('home-total-cartaoamarelo').textContent = statData['Cartão Amarelo'];
+      document.getElementById('home-total-cartaovermelho').textContent = statData['Cartão Vermelho'];
+      document.getElementById('home-total-passes').textContent = statData['Passes'];
+      document.getElementById('home-total-cruzamentos').textContent = statData['Cruzamentos'];
+      document.getElementById('home-total-roubada').textContent = statData['Roubada de Bola'];
+      document.getElementById('home-total-impedimento').textContent = statData['Impedimentos'];
+      document.getElementById('home-total-faltasfeitas').textContent = statData['Faltas Concedidas'];
+      document.getElementById('home-total-faltasganhas').textContent = statData['Faltas Ganhas'];
+      document.getElementById('home-total-defesas').textContent = statData['Defesas'];
+      document.getElementById('home-total-jogos').textContent = statData['Jogos'];
+    }
+
+
+     else if (teamType === 'away') {
+      if (statType === 'geral') {
+        statData = dataAway[0];
+      } else if (statType === 'mandante') {
+        statData = dataAway[5];
+      } else if (statType === 'visitante') {
+        statData = dataAway[1];
+      } else if (statType === 'visitante-tomados') {
+        statData = dataAway[3];
+      }
+      else if (statType === 'mandante-tomados') {
+        statData = dataAway[4];
+      }
+      else if (statType === 'geral-tomados') {
+        statData = dataAway[2];
+      }
+
+      // Atualizando os valores para o time visitante (away)
+      document.getElementById('away-total-gols').textContent = statData['Gols'];
+      document.getElementById('away-total-chutes').textContent = statData['Chutes'];
+      document.getElementById('away-total-chutesnogol').textContent = statData['Chutes no Gol'];
+      document.getElementById('away-total-chutesbloqueados').textContent = statData['Chutes Bloqueados'];
+      document.getElementById('away-total-escanteios').textContent = statData['Escanteios'];
+      document.getElementById('away-total-cartaoamarelo').textContent = statData['Cartão Amarelo'];
+      document.getElementById('away-total-cartaovermelho').textContent = statData['Cartão Vermelho'];
+      document.getElementById('away-total-passes').textContent = statData['Passes'];
+      document.getElementById('away-total-cruzamentos').textContent = statData['Cruzamentos'];
+      document.getElementById('away-total-roubada').textContent = statData['Roubada de Bola'];
+      document.getElementById('away-total-impedimento').textContent = statData['Impedimentos'];
+      document.getElementById('away-total-faltasfeitas').textContent = statData['Faltas Concedidas'];
+      document.getElementById('away-total-faltasganhas').textContent = statData['Faltas Ganhas'];
+      document.getElementById('away-total-defesas').textContent = statData['Defesas'];
+      document.getElementById('away-total-jogos').textContent = statData['Jogos'];
+    }
+    }
+    }
+  function table(dataHome, dataAway, selectedHomeTeam, selectedAwayTeam){
+    document.getElementById('home-player-name').textContent = `${selectedHomeTeam} - Jogadores` ;
+    document.getElementById('away-player-name').textContent = `${selectedAwayTeam} - Jogadores`;
+    renderTable(dataHome, 'Gols', 'home')
+    setActiveButton('gols-home', 'home');
+    renderTable(dataAway, 'Gols', 'away');
+    setActiveButton('gols-away', 'away');
+
+    document.getElementById('gols-home').addEventListener('click', function () {
+      renderTable(dataHome, 'Gols', 'home');
+      setActiveButton('gols-home', 'home');
+    });
+    document.getElementById('assistencias-home').addEventListener('click', function () {
+      renderTable(dataHome, 'Assistência', 'home');
+      setActiveButton('assistencias-home', 'home');
+    });
+    document.getElementById('chutesnogol-home').addEventListener('click', function () {
+      renderTable(dataHome, 'Chutes no Gol', 'home');
+      setActiveButton('chutesnogol-home', 'home');
+    });
+    document.getElementById('chutes-home').addEventListener('click', function () {
+      renderTable(dataHome, 'Chutes', 'home');
+      setActiveButton('chutes-home', 'home');
+    });
+    document.getElementById('roubada-home').addEventListener('click', function () {
+      renderTable(dataHome, 'Roubada de Bola', 'home');
+      setActiveButton('roubada-home', 'home');
+    });
+    document.getElementById('cartaoamarelo-home').addEventListener('click', function () {
+      renderTable(dataHome, 'Cartão Amarelo', 'home');
+      setActiveButton('cartaoamarelo-home', 'home');
+    });
+    document.getElementById('cartaovermelho-home').addEventListener('click', function () {
+      renderTable(dataHome, 'Cartão Vermelho', 'home');
+      setActiveButton('cartaovermelho-home', 'home');
+    });
+
+    document.getElementById('gols-away').addEventListener('click', function () {
+      renderTable(dataAway, 'Gols', 'away');
+      setActiveButton('gols-away', 'away');
+    });
+    document.getElementById('assistencias-away').addEventListener('click', function () {
+      renderTable(dataAway, 'Assistência', 'away');
+      setActiveButton('assistencias-away', 'away');
+    });
+    document.getElementById('chutesnogol-away').addEventListener('click', function () {
+      renderTable(dataAway, 'Chutes no Gol', 'away');
+      setActiveButton('chutesnogol-away', 'away');
+    });
+    document.getElementById('chutes-away').addEventListener('click', function () {
+      renderTable(dataAway, 'Chutes', 'away');
+      setActiveButton('chutes-away', 'away');
+    });
+    document.getElementById('roubada-away').addEventListener('click', function () {
+      renderTable(dataAway, 'Roubada de Bola', 'away');
+      setActiveButton('roubada-away', 'away');
+    });
+    document.getElementById('cartaoamarelo-away').addEventListener('click', function () {
+      renderTable(dataAway, 'Cartão Amarelo', 'away');
+      setActiveButton('cartaoamarelo-away', 'away');
+    });
+    document.getElementById('cartaovermelho-away').addEventListener('click', function () {
+      renderTable(dataAway, 'Cartão Vermelho', 'away');
+      setActiveButton('cartaovermelho-away', 'away');
+    });
+
+    function renderTable(data, statKey, group) {
+      const tableBody = document.getElementById(`player-table-${group}`);
+      const statHeader = document.getElementById(`stat-header-${group}`);
+      statHeader.textContent = statKey;
+
+      // Atualiza o cabeçalho da coluna
+      console.log(data);
+
+      // Ordena os dados em ordem decrescente com base no valor de statKey
+      const sortedData = data.sort((a, b) => b[statKey] - a[statKey]);
+
+      // Limpa o corpo da tabela antes de renderizar
+      tableBody.innerHTML = "";
+
+      // Preenche a tabela com os dados ordenados
+      sortedData.forEach((jogador) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+      <td class="value">${jogador['Atleta']}</td>
+      <td class="value">${jogador['Jogos']}</td>
+      <td class="value">${jogador[statKey]}</td>
+    `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    function setActiveButton(buttonId, group) {
+      // Seleciona todos os botões do grupo específico (home ou away)
+      const buttons = document.querySelectorAll(`#${group}-player-buttons .btn`);
+
+      // Remover a classe 'selected' de todos os botões dentro do grupo
+      buttons.forEach(button => {
+        button.classList.remove('selected');
+      });
+
+      // Adiciona a classe 'selected' ao botão clicado
+      const clickedButton = document.getElementById(buttonId);
+      clickedButton.classList.add('selected');
+    }
+  }
+
+</script>
+</body>
+</html>

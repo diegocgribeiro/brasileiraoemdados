@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela Dinâmica</title>
+    <style>
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<h1>Tabela Dinâmica de Jogadores</h1>
+<button onclick="showStats('gols')">Mostrar Gols</button>
+<button onclick="showStats('assistencias')">Mostrar Assistências</button>
+
+<table>
+    <thead>
+    <tr>
+        <th>Nome</th>
+        <th>Jogos</th>
+        <th id="stat-header">Gols</th>
+    </tr>
+    </thead>
+    <tbody id="player-table">
+    <!-- Os dados serão preenchidos dinamicamente -->
+    </tbody>
+</table>
+
+<script>
+    // Dados dos jogadores
+    const jogadores = [
+        { nome: "Jogador 1", jogos: 10, gols: 5, assistencias: 3 },
+        { nome: "Jogador 2", jogos: 12, gols: 8, assistencias: 6 },
+        { nome: "Jogador 3", jogos: 8, gols: 4, assistencias: 2 },
+    ];
+
+    // Função para renderizar a tabela
+    function renderTable(statKey) {
+        const tableBody = document.getElementById("player-table");
+        const statHeader = document.getElementById("stat-header");
+
+        // Atualiza o cabeçalho da coluna
+        statHeader.textContent = statKey === "gols" ? "Gols" : "Assistências";
+
+        // Limpa o corpo da tabela antes de renderizar
+        tableBody.innerHTML = "";
+
+        // Preenche a tabela com os dados
+        jogadores.forEach((jogador) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+          <td>${jogador.nome}</td>
+          <td>${jogador.jogos}</td>
+          <td>${jogador[statKey]}</td>
+        `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Função para exibir estatísticas específicas (gols ou assistências)
+    function showStats(statKey) {
+        renderTable(statKey);
+    }
+
+    // Renderiza a tabela inicialmente com os gols
+    renderTable("gols");
+</script>
+</body>
+</html>
