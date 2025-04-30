@@ -921,7 +921,7 @@
     const AwayFaltasGanhas = calculateStatistic(AwayGeral, AwayVisitante, HomeGeralTomados, HomeMandanteTomados, 'Faltas Ganhas');
     const HomeDefesas = calculateStatistic(HomeGeral, HomeMandante, AwayGeralTomados, AwayVisitanteTomados, 'Defesas');
     const AwayDefesas = calculateStatistic(AwayGeral, AwayVisitante, HomeGeralTomados, HomeMandanteTomados, 'Defesas');
-    const Z = 3.28285676 + (-0.02790538*(HomeChutesNoGol+AwayChutesNoGol)) + (-0.0441487*(HomeCartaoAmarelo+AwayCartaoAmarelo)) + (-0.08484195*(HomeChutesBloqueados+AwayChutesBloqueados)) + (-0.06308115*(HomeCruzamentos+AwayCruzamentos))
+    const Z = 3.03713486 + (0.44902599*(HomeGols+AwayGols)) + (-0.32189585*(HomeChutesNoGol+AwayChutesNoGol)) + (-0.04883097*(HomeCartaoAmarelo+AwayCartaoAmarelo)) + (-0.08716968*(HomeChutesBloqueados+AwayChutesBloqueados)) + (-0.05832523*(HomeCruzamentos+AwayCruzamentos)) + (0.25343978*(HomeDefesas+AwayDefesas))
     const proba = 1/(1+Math.exp(-Z))
 
     document.getElementById('home_vitoria').textContent = `Probabilidade de ${(proba*100).toFixed(2)}% - Vitória do ${homeTeam}`

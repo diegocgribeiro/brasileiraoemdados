@@ -1,6 +1,6 @@
-# Projeto de Extração de Dados do Optajoe
+# Projeto Brasileirão em Dados
 
-Este projeto tem como objetivo **extrair dados do Optajoe** e armazená-los em um banco de dados **MySQL**. Além disso, a interface do site foi criada utilizando **HTML, CSS e JavaScript**, permitindo que você visualize todas as atualizações de forma simples e organizada.
+Este projeto tem como objetivo **extrair dados do Optajoe do Brasileirão 2025** e armazená-los em um banco de dados **MySQL**. Além disso, a interface do site foi criada utilizando **HTML, CSS e JavaScript**, permitindo que você visualize todas as atualizações de forma simples e organizada.
 
 ---
 
